@@ -18,4 +18,19 @@ There you can find links to upgrade notes for other versions too.
     - `categoriyWithLazyLoadedVisibleChildren` ⟶ `categoryWithLazyLoadedVisibleChildren`
 - create an empty file `app/Resources/.gitkeep` to prepare a folder for [your overwritten templates](/docs/cookbook/modifying-a-template-in-administration.md) ([#1073](https://github.com/shopsys/shopsys/pull/1073))
 
+### Infrastructure
+- add configuration into `kubernetes/deployments/webserver-php-fpm.yml` to run initialization process of php-fpm container as user www-data(33) ([#1078](https://github.com/shopsys/shopsys/pull/1073))
+    ```diff
+        image: ~
+    +   securityContext:
+    +       runAsUser: 33
+        command: ["sh", "-c", "cp -r /var/www/html/. /tmp/source-codes"]
+    ```
+    ```diff
+        image: ~
+    +   securityContext:
+    +       runAsUser: 33
+        command: ["sh", "-c", "cd /var/www/html && ./phing db-create dirs-create db-demo product-search-recreate-structure product-search-export-products grunt error-pages-generate warmup"]
+    ```
+
 [shopsys/framework]: https://github.com/shopsys/framework
